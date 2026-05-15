@@ -10,7 +10,7 @@ interface DocumentCardProps {
   code: string;
   title: string;
   description?: string;
-  status: string;
+  status: "draft" | "active" | "archived";
   type: DocType;
   linkedCount: number;
   children: ChildDoc[];
