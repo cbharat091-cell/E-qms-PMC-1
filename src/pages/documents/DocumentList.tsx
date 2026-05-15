@@ -100,9 +100,23 @@ export default function DocumentList() {
       .filter((document) => document.parentProcedureId === procedureId)
       .sort((a, b) => compareDocumentCodes(a.code, b.code));
 
+  const counts = useMemo(() => ({
+    procedures: documents.filter(d => d.type === "procedure" && d.status !== "archived").length,
+    forms: documents.filter(d => d.type === "form" && d.status !== "archived").length,
+    instructions: documents.filter(d => d.type === "instruction" && d.status !== "archived").length,
+    archived: documents.filter(d => d.status === "archived").length,
+  }), [documents]);
+
   return (
     <div className="min-h-screen">
-      <PageHeader title="Documents" subtitle="Procedures, forms and controlled records" />
+      <AdaptiveContainer className="pt-4 pb-2">
+        <DocumentsHero
+          procedureCount={counts.procedures}
+          formCount={counts.forms}
+          instructionCount={counts.instructions}
+          archivedCount={counts.archived}
+        />
+      </AdaptiveContainer>
 
       <FilterBar
         filters={filterConfigs}
@@ -115,10 +129,12 @@ export default function DocumentList() {
       />
 
       <AdaptiveContainer className="py-4 space-y-4">
-        <div className="flex items-center gap-3 flex-wrap">
-          <Button variant="outline" onClick={() => navigate("/documents/new")}>Add document</Button>
-          <Button variant="outline" onClick={() => navigate("/documents?status=archived")}>
-            <Archive className="w-4 h-4 mr-2" />Archived
+        <div className="flex items-center gap-2 flex-wrap">
+          <Button variant="default" onClick={() => navigate("/documents/new")} className="gap-2">
+            <Plus className="w-4 h-4" /> Add document
+          </Button>
+          <Button variant="outline" onClick={() => navigate("/documents?status=archived")} className="gap-2">
+            <Archive className="w-4 h-4" /> Archived
           </Button>
         </div>
 
@@ -132,45 +148,21 @@ export default function DocumentList() {
           />
         ) : (
           <AdaptiveGrid cols="1-2-3" gap="md">
-            {procedures.map((document) => {
-              const linkedForms = getProcedureChildren(document.id).slice(0, 4);
-              const linkedCount = getProcedureChildren(document.id).length;
-
+            {procedures.map((document, idx) => {
+              const children = getProcedureChildren(document.id);
               return (
-                <button
+                <DocumentCard
                   key={document.id}
+                  index={idx}
+                  code={document.code}
+                  title={document.title}
+                  description={document.description}
+                  status={document.status}
+                  type={document.type}
+                  linkedCount={children.length}
+                  children={children}
                   onClick={() => navigate(`/documents/${document.id}`)}
-                  className="process-card w-full text-left"
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1 flex-wrap">
-                        <span className="font-mono text-xs text-primary font-medium">{document.code}</span>
-                        <StatusBadge status={document.status} />
-                        <div className="flex items-center gap-1 px-1.5 py-0.5 rounded text-xs bg-blue-100 text-blue-700">
-                          <FileCheck className="w-3 h-3" />
-                          <span className="font-medium">Procedure</span>
-                        </div>
-                      </div>
-                      <h3 className="font-semibold truncate">{document.title}</h3>
-                      {document.description && (
-                        <p className="text-sm text-muted-foreground line-clamp-2 mt-1">{document.description}</p>
-                      )}
-                      <p className="text-xs text-muted-foreground mt-2">Related forms/docs: {linkedCount}</p>
-                      {linkedForms.length > 0 && (
-                        <ul className="mt-2 text-xs text-muted-foreground space-y-0.5">
-                          {linkedForms.map((form) => (
-                            <li key={form.id} className="truncate">
-                              • {form.code} — {form.title}
-                            </li>
-                          ))}
-                          {linkedCount > linkedForms.length && <li>…and {linkedCount - linkedForms.length} more</li>}
-                        </ul>
-                      )}
-                    </div>
-                    <ArrowRight className="w-5 h-5 text-muted-foreground shrink-0 mt-1" />
-                  </div>
-                </button>
+                />
               );
             })}
           </AdaptiveGrid>
