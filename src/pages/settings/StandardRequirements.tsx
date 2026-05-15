@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import {
   FileText, Target, CheckCircle2, Archive, BookOpen, Search,
   Compass, Users, Lightbulb, Settings2, BarChart3, Sparkles, ShieldCheck,
+  Table2, PenLine, ShieldOff, Clock,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -85,6 +86,97 @@ function RequirementDetail({ req }: { req: RequirementGuidance }) {
           <EvidenceCol label="Other" items={req.supportingEvidence.other} />
         </div>
       </div>
+
+      <RecordTemplateBlock template={req.recordTemplate} />
+    </div>
+  );
+}
+
+function RecordTemplateBlock({ template }: { template: RequirementGuidance["recordTemplate"] }) {
+  const { name, columns, approval, retention } = template;
+  return (
+    <div className="rounded-xl border border-primary/20 bg-gradient-to-br from-primary/[0.04] to-transparent p-4 space-y-3">
+      <div className="flex items-start justify-between gap-3 flex-wrap">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center ring-1 ring-primary/20">
+            <Table2 className="h-4 w-4" />
+          </div>
+          <div>
+            <div className="text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+              Suggested record template
+            </div>
+            <div className="text-sm font-semibold text-foreground">{name}</div>
+          </div>
+        </div>
+        <ApprovalBadge approval={approval} />
+      </div>
+
+      <div className="rounded-lg border border-border/60 overflow-hidden bg-background">
+        <div className="grid grid-cols-[auto_1fr] text-xs">
+          <div className="bg-muted/50 px-3 py-2 font-mono text-[10px] text-muted-foreground uppercase tracking-widest border-b border-border/60">
+            Column
+          </div>
+          <div className="bg-muted/50 px-3 py-2 font-mono text-[10px] text-muted-foreground uppercase tracking-widest border-b border-border/60">
+            Captures
+          </div>
+          {columns.map((c, i) => (
+            <RowFragment key={i} index={i} name={c.name} description={c.description} last={i === columns.length - 1} />
+          ))}
+        </div>
+      </div>
+
+      {(approval.note || retention) && (
+        <div className="grid gap-2 sm:grid-cols-2 text-xs">
+          {approval.note && (
+            <div className="flex gap-2 rounded-lg bg-muted/40 px-3 py-2">
+              <PenLine className="h-3.5 w-3.5 text-primary mt-0.5 shrink-0" />
+              <span className="text-foreground/85 leading-relaxed">{approval.note}</span>
+            </div>
+          )}
+          {retention && (
+            <div className="flex gap-2 rounded-lg bg-muted/40 px-3 py-2">
+              <Clock className="h-3.5 w-3.5 text-info mt-0.5 shrink-0" />
+              <span className="text-foreground/85 leading-relaxed">
+                <span className="font-medium">Retention:</span> {retention}
+              </span>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function RowFragment({
+  index, name, description, last,
+}: { index: number; name: string; description?: string; last: boolean }) {
+  const border = last ? "" : "border-b border-border/40";
+  return (
+    <>
+      <div className={cn("px-3 py-2 font-medium text-foreground/90 bg-muted/20 flex items-center gap-2", border)}>
+        <span className="font-mono text-[10px] text-muted-foreground tabular-nums">{String(index + 1).padStart(2, "0")}</span>
+        <span>{name}</span>
+      </div>
+      <div className={cn("px-3 py-2 text-muted-foreground", border)}>
+        {description || <span className="opacity-50">—</span>}
+      </div>
+    </>
+  );
+}
+
+function ApprovalBadge({ approval }: { approval: RequirementGuidance["recordTemplate"]["approval"] }) {
+  if (!approval.required) {
+    return (
+      <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-muted/60 text-muted-foreground text-[11px] font-medium ring-1 ring-border/60">
+        <ShieldOff className="h-3 w-3" />
+        Not subject to approval
+      </div>
+    );
+  }
+  return (
+    <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-success/10 text-success text-[11px] font-medium ring-1 ring-success/20">
+      <PenLine className="h-3 w-3" />
+      Signature required{approval.approver ? ` · ${approval.approver}` : ""}
     </div>
   );
 }
