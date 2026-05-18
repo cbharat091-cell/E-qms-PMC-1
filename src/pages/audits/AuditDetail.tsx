@@ -112,20 +112,24 @@ export default function AuditDetail() {
 
   const updateResult = async (itemId: string, result: string, item: ChecklistItem) => {
     if (!profile?.organization_id || !audit) return;
+    type ResultEnum = "pending" | "conform" | "minor_nc" | "major_nc" | "observation" | "ofi" | "na";
+    type FindingEnum = "major_nc" | "minor_nc" | "observation" | "ofi" | "conformity";
     await supabase
       .from("audit_checklist_items")
-      .update({ result, checked_at: new Date().toISOString() })
+      .update({ result: result as ResultEnum, checked_at: new Date().toISOString() })
       .eq("id", itemId);
 
     // Spawn a finding for non-conformities / observations / OFI
     if (["minor_nc", "major_nc", "observation", "ofi"].includes(result)) {
       const yr = new Date().getFullYear().toString().slice(-2);
+      const findingType: FindingEnum =
+        result === "ofi" ? "ofi" : result === "observation" ? "observation" : (result as "minor_nc" | "major_nc");
       await supabase.from("audit_findings").insert({
         audit_id: audit.id,
         organization_id: profile.organization_id,
         checklist_item_id: itemId,
         reference_code: `FND/${yr}/${String(findings.length + 1).padStart(3, "0")}`,
-        finding_type: result === "ofi" ? "ofi" : result === "observation" ? "observation" : result,
+        finding_type: findingType,
         clause_code: item.clause_code,
         statement: item.question,
         evidence: item.notes || null,
@@ -141,7 +145,8 @@ export default function AuditDetail() {
 
   const updateStatus = async (status: string) => {
     if (!audit) return;
-    await supabase.from("audits").update({ status }).eq("id", audit.id);
+    type AuditStatusEnum = "planned" | "in_progress" | "reporting" | "closed" | "cancelled";
+    await supabase.from("audits").update({ status: status as AuditStatusEnum }).eq("id", audit.id);
     load();
   };
 

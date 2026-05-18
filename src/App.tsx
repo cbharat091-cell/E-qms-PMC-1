@@ -6,6 +6,12 @@ import { ManagementSystemProvider } from "@/context/ManagementSystemContext";
 import { TenantProvider } from "@/context/TenantContext";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { ScrollToTop } from "@/components/layout/ScrollToTop";
+import { RequireAuth } from "@/components/auth/RequireAuth";
+
+import AuthPage from "./pages/Auth";
+import ResetPassword from "./pages/ResetPassword";
+import Onboarding from "./pages/Onboarding";
+
 import Settings from "./pages/Settings";
 import ActivityLog from "./pages/ActivityLog";
 import Help from "./pages/Help";
@@ -28,6 +34,8 @@ import ToolsOverview from "@/pages/tools/ToolsOverview";
 import ToolWorkspacePage from "@/pages/tools/ToolWorkspacePage";
 import CBOverview from "@/pages/certification-body/CBOverview";
 import CBWorkspacePage from "@/pages/certification-body/CBWorkspacePage";
+import AuditList from "./pages/audits/AuditList";
+import AuditDetail from "./pages/audits/AuditDetail";
 import NotFound from "./pages/NotFound";
 
 const App = () => (
@@ -39,7 +47,24 @@ const App = () => (
         <BrowserRouter>
           <ScrollToTop />
           <Routes>
-            <Route element={<AppLayout />}>
+            <Route path="/auth" element={<AuthPage />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route
+              path="/onboarding"
+              element={
+                <RequireAuth>
+                  <Onboarding />
+                </RequireAuth>
+              }
+            />
+
+            <Route
+              element={
+                <RequireAuth>
+                  <AppLayout />
+                </RequireAuth>
+              }
+            >
               <Route path="/" element={<Dashboard />} />
 
               <Route path="/processes" element={<ProcessList />} />
@@ -65,6 +90,9 @@ const App = () => (
               <Route path="/documents/new" element={<DocumentForm />} />
               <Route path="/documents/:id" element={<DocumentDetail />} />
               <Route path="/documents/:id/edit" element={<DocumentForm />} />
+
+              <Route path="/audits" element={<AuditList />} />
+              <Route path="/audits/:id" element={<AuditDetail />} />
 
               <Route path="/settings" element={<Settings />} />
               <Route path="/settings/standard-requirements" element={<StandardRequirements />} />

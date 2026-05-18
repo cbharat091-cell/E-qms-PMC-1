@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { UserMenu } from "@/components/layout/UserMenu";
+import { NotificationsBell } from "@/components/notifications/NotificationsBell";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,6 +28,7 @@ interface PageHeaderProps {
     variant?: "default" | "destructive" | "outline";
     icon?: React.ReactNode;
   }[];
+  action?: React.ReactNode;
   versionInfo?: {
     version: number;
     revisionDate: string;
@@ -61,6 +63,7 @@ export function PageHeader({
   subtitle,
   showBack = false,
   actions,
+  action,
   versionInfo,
   breadcrumbs,
 }: PageHeaderProps) {
@@ -163,6 +166,7 @@ export function PageHeader({
           </div>
 
           <div className="flex items-center gap-2">
+            {action}
             <Button variant="ghost" size="icon" className="shrink-0" onClick={() => setSearchOpen(true)}>
               <Search className="h-5 w-5" />
             </Button>
@@ -174,19 +178,20 @@ export function PageHeader({
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
-                  {actions.map((action, index) => (
+                  {actions.map((a, index) => (
                     <DropdownMenuItem
                       key={index}
-                      onClick={action.onClick}
-                      className={action.variant === "destructive" ? "text-destructive" : ""}
+                      onClick={a.onClick}
+                      className={a.variant === "destructive" ? "text-destructive" : ""}
                     >
-                      {action.icon && <span className="mr-2">{action.icon}</span>}
-                      {action.label}
+                      {a.icon && <span className="mr-2">{a.icon}</span>}
+                      {a.label}
                     </DropdownMenuItem>
                   ))}
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
+            <NotificationsBell />
             <UserMenu />
           </div>
         </div>
