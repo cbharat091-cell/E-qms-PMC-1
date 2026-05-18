@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Workflow, FileText, ShieldCheck, Shield } from "lucide-react";
+import { LayoutDashboard, Workflow, ClipboardCheck, ShieldCheck, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface NavItem {
@@ -9,10 +9,10 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { path: "/", label: "Dashboard", icon: LayoutDashboard },
+  { path: "/", label: "Home", icon: LayoutDashboard },
   { path: "/processes", label: "Processes", icon: Workflow },
+  { path: "/audits", label: "Audits", icon: ClipboardCheck },
   { path: "/tools", label: "Tools", icon: ShieldCheck },
-  { path: "/cb", label: "CB", icon: Shield },
   { path: "/documents", label: "Docs", icon: FileText },
 ];
 

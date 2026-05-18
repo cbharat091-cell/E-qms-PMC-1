@@ -5,6 +5,7 @@ import {
   FileText,
   ShieldCheck,
   Shield,
+  ClipboardCheck,
   PanelLeftClose,
   PanelLeftOpen,
 } from "lucide-react";
@@ -21,6 +22,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { path: "/", label: "Dashboard", icon: LayoutDashboard },
   { path: "/processes", label: "Processes", icon: Workflow },
+  { path: "/audits", label: "Internal Audits", icon: ClipboardCheck },
   { path: "/tools", label: "Tools", icon: ShieldCheck },
   { path: "/cb", label: "Certification Body", icon: Shield },
   { path: "/documents", label: "Documents", icon: FileText },
