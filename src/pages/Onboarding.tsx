@@ -38,33 +38,40 @@ export default function Onboarding() {
     if (!user) return;
     setBusy(true);
     try {
-      // 1. Update profile name/title
-      const { error: pErr } = await supabase
-        .from("profiles")
-        .update({ display_name: displayName, job_title: jobTitle, onboarded_at: new Date().toISOString() })
-        .eq("id", user.id);
-      if (pErr) throw pErr;
+      const orgId = crypto.randomUUID();
 
-      // 2. Create organization
-      const { data: org, error: oErr } = await supabase
+      // 1. Create organization without requesting a returned row.
+      // During onboarding the user is not an org member yet, so RLS allows creation
+      // but not reading the just-created org until the profile is linked.
+      const { error: oErr } = await supabase
         .from("organizations")
-        .insert({ name: orgName, sector, country, scope_statement: scopeStatement })
-        .select()
-        .single();
+        .insert({
+          id: orgId,
+          name: orgName.trim(),
+          sector: sector.trim() || null,
+          country: country.trim() || null,
+          scope_statement: scopeStatement.trim() || null,
+        });
       if (oErr) throw oErr;
 
-      // 3. Link profile to org
-      const { error: lErr } = await supabase
-        .from("profiles")
-        .update({ organization_id: org.id })
-        .eq("id", user.id);
-      if (lErr) throw lErr;
-
-      // 4. Grant first RMQ role (RLS policy allows this when no roles exist yet)
+      // 2. Grant first RMQ role before linking the profile; this is explicitly
+      // permitted by the first-user bootstrap policy for a new organization.
       const { error: rErr } = await supabase
         .from("user_roles")
-        .insert({ user_id: user.id, organization_id: org.id, role: "rmq" });
+        .insert({ user_id: user.id, organization_id: orgId, role: "rmq" });
       if (rErr) throw rErr;
+
+      // 3. Link profile to org and mark onboarding complete
+      const { error: lErr } = await supabase
+        .from("profiles")
+        .update({
+          display_name: displayName.trim(),
+          job_title: jobTitle.trim() || null,
+          organization_id: orgId,
+          onboarded_at: new Date().toISOString(),
+        })
+        .eq("id", user.id);
+      if (lErr) throw lErr;
 
       await reload();
       toast.success("Welcome to your QMS");
