@@ -7,6 +7,8 @@ import { TenantProvider } from "@/context/TenantContext";
 import { AppLayout } from "@/components/layout/AppLayout";
 import { ScrollToTop } from "@/components/layout/ScrollToTop";
 import { RequireAuth } from "@/components/auth/RequireAuth";
+import { TourProvider } from "@/context/TourContext";
+import { AppTour } from "@/components/tour/AppTour";
 
 import AuthPage from "./pages/Auth";
 import ResetPassword from "./pages/ResetPassword";
@@ -46,6 +48,8 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <ScrollToTop />
+          <TourProvider>
+          <AppTour />
           <Routes>
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/reset-password" element={<ResetPassword />} />
