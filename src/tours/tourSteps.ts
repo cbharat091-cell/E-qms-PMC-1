@@ -1,4 +1,6 @@
-import type { Step } from "react-joyride";
+// react-joyride v2 Step shape (typed loosely to avoid `export =` interop issues)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Step = any;
 
 export type TourKey =
   | "dashboard"
