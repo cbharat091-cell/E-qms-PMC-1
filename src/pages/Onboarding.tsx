@@ -16,6 +16,7 @@ export default function Onboarding() {
   const { user, profile, reload } = useAuth();
   const [step, setStep] = useState(0);
   const [busy, setBusy] = useState(false);
+  const [aiBusy, setAiBusy] = useState(false);
 
   const [displayName, setDisplayName] = useState(profile?.display_name ?? "");
   const [jobTitle, setJobTitle] = useState(profile?.job_title ?? "");
@@ -33,6 +34,32 @@ export default function Onboarding() {
 
   const next = () => setStep((s) => Math.min(s + 1, steps.length - 1));
   const back = () => setStep((s) => Math.max(s - 1, 0));
+
+  const suggestScope = async () => {
+    if (!orgName.trim() && !sector.trim()) {
+      toast.error("Add an organization name or sector first");
+      return;
+    }
+    setAiBusy(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("ai-draft", {
+        body: {
+          kind: "scope-statement",
+          input: { sector, country, orgName },
+        },
+      });
+      if (error) throw error;
+      const scope = (data as { scope?: string })?.scope;
+      if (scope) {
+        setScopeStatement(scope);
+        toast.success("Scope statement drafted");
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "AI draft failed");
+    } finally {
+      setAiBusy(false);
+    }
+  };
 
   const finish = async () => {
     if (!user) return;
@@ -137,7 +164,13 @@ export default function Onboarding() {
 
           {step === 2 && (
             <div className="space-y-3">
-              <p className="text-sm text-muted-foreground">Describe the scope of your Quality Management System (ISO 9001 clause 4.3).</p>
+              <div className="flex items-start justify-between gap-2">
+                <p className="text-sm text-muted-foreground flex-1">Describe the scope of your Quality Management System (ISO 9001 clause 4.3).</p>
+                <Button type="button" variant="outline" size="sm" onClick={suggestScope} disabled={aiBusy}>
+                  {aiBusy ? <Loader2 className="h-3.5 w-3.5 mr-1 animate-spin" /> : <Sparkles className="h-3.5 w-3.5 mr-1" />}
+                  Suggest with AI
+                </Button>
+              </div>
               <Textarea
                 rows={6}
                 value={scopeStatement}

@@ -14,6 +14,7 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { ModuleCard } from "@/components/ui/module-card";
 import { AdaptiveContainer } from "@/components/layout/AdaptiveContainer";
 import { AdaptiveGrid } from "@/components/layout/AdaptiveGrid";
+import { AICoachRow } from "@/components/ai/AICoachRow";
 import { useManagementSystem } from "@/context/ManagementSystemContext";
 
 const modules = [
@@ -113,6 +114,18 @@ export default function Dashboard() {
           overdueActions={overdueActions.length}
         />
         </div>
+
+        <AICoachRow
+          scope="dashboard"
+          contextSummary={{
+            processCount: processes.length,
+            openRisks,
+            overdueActions: overdueActions.length,
+            compliancePct,
+            unallocatedUniqueClauses: unallocatedUniqueCount,
+            notSatisfiedRequirements: requirementsStats.notSatisfied,
+          }}
+        />
 
         {/* Bento Signals */}
         <section data-tour="signals" className="animate-fade-in" style={{ animationDelay: '60ms' }}>
