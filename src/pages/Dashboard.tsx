@@ -14,6 +14,7 @@ import { PageHeader } from "@/components/layout/PageHeader";
 import { ModuleCard } from "@/components/ui/module-card";
 import { AdaptiveContainer } from "@/components/layout/AdaptiveContainer";
 import { AdaptiveGrid } from "@/components/layout/AdaptiveGrid";
+import { AICoachRow } from "@/components/ai/AICoachRow";
 import { useManagementSystem } from "@/context/ManagementSystemContext";
 
 const modules = [
