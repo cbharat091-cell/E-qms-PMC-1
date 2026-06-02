@@ -115,6 +115,18 @@ export default function Dashboard() {
         />
         </div>
 
+        <AICoachRow
+          scope="dashboard"
+          contextSummary={{
+            processCount: processes.length,
+            openRisks,
+            overdueActions: overdueActions.length,
+            compliancePct,
+            unallocatedUniqueClauses: unallocatedUniqueCount,
+            notSatisfiedRequirements: requirementsStats.notSatisfied,
+          }}
+        />
+
         {/* Bento Signals */}
         <section data-tour="signals" className="animate-fade-in" style={{ animationDelay: '60ms' }}>
           <SectionLabel>System Signals</SectionLabel>
