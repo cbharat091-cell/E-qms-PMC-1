@@ -16,6 +16,7 @@ export default function Onboarding() {
   const { user, profile, reload } = useAuth();
   const [step, setStep] = useState(0);
   const [busy, setBusy] = useState(false);
+  const [aiBusy, setAiBusy] = useState(false);
 
   const [displayName, setDisplayName] = useState(profile?.display_name ?? "");
   const [jobTitle, setJobTitle] = useState(profile?.job_title ?? "");
