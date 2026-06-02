@@ -35,6 +35,32 @@ export default function Onboarding() {
   const next = () => setStep((s) => Math.min(s + 1, steps.length - 1));
   const back = () => setStep((s) => Math.max(s - 1, 0));
 
+  const suggestScope = async () => {
+    if (!orgName.trim() && !sector.trim()) {
+      toast.error("Add an organization name or sector first");
+      return;
+    }
+    setAiBusy(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("ai-draft", {
+        body: {
+          kind: "scope-statement",
+          input: { sector, country, orgName },
+        },
+      });
+      if (error) throw error;
+      const scope = (data as { scope?: string })?.scope;
+      if (scope) {
+        setScopeStatement(scope);
+        toast.success("Scope statement drafted");
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "AI draft failed");
+    } finally {
+      setAiBusy(false);
+    }
+  };
+
   const finish = async () => {
     if (!user) return;
     setBusy(true);
