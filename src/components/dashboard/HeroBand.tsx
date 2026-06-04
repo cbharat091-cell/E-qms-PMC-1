@@ -28,8 +28,8 @@ export function HeroBand({
       <div className="absolute inset-0 pattern-dots opacity-60 pointer-events-none rounded-2xl" />
       <div className="relative grid gap-6 md:grid-cols-[1.2fr_2fr] md:items-center">
         <div className="space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/8 text-primary text-[11px] font-medium uppercase tracking-widest">
-            <ShieldCheck className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/8 text-primary text-[11px] font-medium uppercase tracking-widest anim-glow">
+            <ShieldCheck className="w-3.5 h-3.5 anim-breathe" />
             Active standard
           </div>
           <div className="flex items-baseline gap-2 flex-wrap">
