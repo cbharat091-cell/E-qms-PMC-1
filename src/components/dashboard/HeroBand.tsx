@@ -65,9 +65,9 @@ function KpiPill({
 }: { icon: typeof FileText; label: string; value: string | number; tone: keyof typeof TONE }) {
   const t = TONE[tone];
   return (
-    <div className={cn("flex items-center gap-3 px-3 py-2.5 rounded-xl bg-card/70 backdrop-blur-sm ring-1", t.ring)}>
+    <div data-reveal="zoom" className={cn("flex items-center gap-3 px-3 py-2.5 rounded-xl bg-card/70 backdrop-blur-sm ring-1 hover-lift", t.ring)}>
       <div className={cn("w-9 h-9 rounded-lg flex items-center justify-center shrink-0", t.bg)}>
-        <Icon className={cn("w-4 h-4", t.text)} />
+        <Icon className={cn("w-4 h-4 anim-float", t.text)} />
       </div>
       <div className="min-w-0">
         <div className={cn("font-mono text-xl font-bold leading-none tabular-nums", t.text)}>{value}</div>
