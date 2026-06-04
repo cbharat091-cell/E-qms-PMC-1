@@ -42,7 +42,7 @@ export function HeroBand({
           </p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3" data-stagger>
           <KpiPill icon={ShieldCheck} label="Compliance" value={`${compliancePct}%`} tone="process" />
           <KpiPill icon={Workflow} label="Processes" value={processCount} tone="primary" />
           <KpiPill icon={AlertTriangle} label="Open Risks" value={openRisks} tone="risk" />
