@@ -28,8 +28,8 @@ export function HeroBand({
       <div className="absolute inset-0 pattern-dots opacity-60 pointer-events-none rounded-2xl" />
       <div className="relative grid gap-6 md:grid-cols-[1.2fr_2fr] md:items-center">
         <div className="space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/8 text-primary text-[11px] font-medium uppercase tracking-widest">
-            <ShieldCheck className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/8 text-primary text-[11px] font-medium uppercase tracking-widest anim-glow">
+            <ShieldCheck className="w-3.5 h-3.5 anim-breathe" />
             Active standard
           </div>
           <div className="flex items-baseline gap-2 flex-wrap">
@@ -42,7 +42,7 @@ export function HeroBand({
           </p>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3" data-stagger>
           <KpiPill icon={ShieldCheck} label="Compliance" value={`${compliancePct}%`} tone="process" />
           <KpiPill icon={Workflow} label="Processes" value={processCount} tone="primary" />
           <KpiPill icon={AlertTriangle} label="Open Risks" value={openRisks} tone="risk" />
@@ -65,9 +65,9 @@ function KpiPill({
 }: { icon: typeof FileText; label: string; value: string | number; tone: keyof typeof TONE }) {
   const t = TONE[tone];
   return (
-    <div className={cn("flex items-center gap-3 px-3 py-2.5 rounded-xl bg-card/70 backdrop-blur-sm ring-1", t.ring)}>
+    <div data-reveal="zoom" className={cn("flex items-center gap-3 px-3 py-2.5 rounded-xl bg-card/70 backdrop-blur-sm ring-1 hover-lift", t.ring)}>
       <div className={cn("w-9 h-9 rounded-lg flex items-center justify-center shrink-0", t.bg)}>
-        <Icon className={cn("w-4 h-4", t.text)} />
+        <Icon className={cn("w-4 h-4 anim-float", t.text)} />
       </div>
       <div className="min-w-0">
         <div className={cn("font-mono text-xl font-bold leading-none tabular-nums", t.text)}>{value}</div>
