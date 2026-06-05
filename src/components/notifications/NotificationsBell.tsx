@@ -33,6 +33,7 @@ const KIND_LABEL: Record<string, string> = {
 export function NotificationsBell() {
   const { user } = useAuth();
   const [items, setItems] = useState<Notification[]>([]);
+  const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
 
   const load = async () => {
@@ -43,6 +44,7 @@ export function NotificationsBell() {
       .order("created_at", { ascending: false })
       .limit(50);
     setItems((data ?? []) as Notification[]);
+    setLoading(false);
   };
 
   useEffect(() => {
