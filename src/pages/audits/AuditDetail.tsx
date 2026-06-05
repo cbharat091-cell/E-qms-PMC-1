@@ -210,7 +210,7 @@ export default function AuditDetail() {
   };
 
   return (
-    <div className="px-4 lg:px-6 py-6 space-y-6 max-w-6xl mx-auto w-full">
+    <div className="px-4 lg:px-6 py-6 space-y-6 max-w-6xl mx-auto w-full morph-fade-in">
       <div className="space-y-3">
         <Link to="/audits" className="text-sm text-muted-foreground hover:text-primary inline-flex items-center gap-1">
           <ArrowLeft className="h-3.5 w-3.5" /> All audits
