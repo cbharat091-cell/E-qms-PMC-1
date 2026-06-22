@@ -1,119 +1,20 @@
-# eQMS Frontend
+<div align="center">
+<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
+</div>
 
-Quality management system frontend built with Vite, React, TypeScript, Tailwind, and MariaDB (via PHP API).
+# Run and deploy your AI Studio app
 
-## Getting started
+This contains everything you need to run your app locally.
 
-```sh
-npm install
-npm run dev
-```
+View your app in AI Studio: https://ai.studio/apps/4867dad9-e5fd-475a-8aa5-d29acd9d3171
 
-## Deploying on shared hosting (build-only)
+## Run Locally
 
-If your hosting environment does not allow Node/React dev servers, use the static build output.
-This produces a `dist/` folder you can upload to your hosting provider.
+**Prerequisites:**  Node.js
 
-```sh
-npm run build
-```
 
-Then upload the `dist/` directory. The PHP API can live on the same shared hosting environment.
-
-### Shared hosting with PHP (recommended)
-
-If your hosting supports PHP but not Node, use the built-in PHP API:
-
-1. Build the frontend:
-
-```sh
-npm run build
-```
-
-2. Upload the `dist/` folder to your hosting.
-3. Upload the `public/api` folder (PHP API) alongside your `dist` files.
-4. Copy `public/api/config.example.php` to `public/api/config.php` and fill in your MariaDB credentials.
-5. Set `VITE_API_BASE_URL="/api"` when building, so the frontend calls the PHP API on the same host.
-
-This PHP API writes to the `records` table used by the frontend.
-It also expects an `X-Tenant-Id` header so data is scoped per tenant.
-
-## Environment configuration
-
-This frontend does not connect to a database directly. Database credentials are kept in the backend
-service. Configure both frontend and backend by creating a local `.env`:
-
-```sh
-# .env
-# Frontend
-VITE_API_BASE_URL=""
-
-# Backend (PHP)
-DB_HOST="localhost"
-DB_PORT=3306
-DB_NAME="macerti_app"
-DB_USER="macerti_app"
-DB_PASSWORD="your_password_here"
-```
-
-Copy the template to start:
-
-```sh
-cp .env.example .env
-```
-
-## API contract (initial)
-
-Your backend should expose at least:
-
-```
-GET /api/health
-GET /api/records/:type
-POST /api/records/:type
-PUT /api/records/:type/:id
-DELETE /api/records/:type/:id
-GET /api/tenants
-POST /api/tenants
-POST /api/users
-POST /api/memberships
-GET /api/processes
-POST /api/processes
-GET /api/processes/:id
-PUT /api/processes/:id
-DELETE /api/processes/:id
-GET /api/processes/:id/activities
-POST /api/processes/:id/activities
-PUT /api/activities/:id
-DELETE /api/activities/:id
-GET /api/requirements
-POST /api/requirements
-GET /api/activities/:id/requirements
-POST /api/activities/:id/requirements
-DELETE /api/activities/:id/requirements/:requirementId
-```
-
-The UI currently uses these record endpoints to persist processes, issues, actions, and documents.
-You can extend this contract as needed for auditing, users, or workflows.
-
-## Tech stack
-
-- Vite
-- React
-- TypeScript
-- Tailwind CSS
-- shadcn/ui
-
-## GitHub Actions: build + FTP deploy
-
-This repository includes a workflow at `.github/workflows/deploy-ftp.yml`.
-It builds the app and uploads `dist/` to your FTP hosting whenever you push to `main`
-(or run it manually with **Run workflow**).
-
-Set these repository secrets in **GitHub → Settings → Secrets and variables → Actions**:
-
-- `FTP_SERVER` (example: `ftp.macerti.com`)
-- `FTP_USERNAME` (example: `qms@macerti.com`)
-- `FTP_PASSWORD`
-- `FTP_SERVER_DIR` (example: `/home/macerti/public_html/qms/`)
-
-> Security note: never commit FTP credentials directly in workflow files.
+1. Install dependencies:
+   `npm install`
+2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
+3. Run the app:
+   `npm run dev`
